@@ -1,7 +1,9 @@
 pipeline {
     agent any
-    tools { maven 'Maven' }
-    
+    tools { 
+        maven 'Maven' 
+    }
+
     environment {
         REPO_URL = 'https://github.com/Mani-Selvaraj/webapp.git'
         MAVEN_GOALS = 'package'
@@ -16,23 +18,16 @@ pipeline {
 
         stage('ContinuousDownload_Build') {
             steps {
-                script {
-                    continuousDownloadAndBuild(env.REPO_URL, env.MAVEN_GOALS)
-                }
+                git url: env.REPO_URL
+                sh "mvn ${env.MAVEN_GOALS}"
             }
         }
 
         stage('ContinuousBuild_Build') {
             steps {
-                script {
-                    continuousDownloadAndBuild(env.REPO_URL, env.MAVEN_GOALS)
-                }
+                git url: env.REPO_URL
+                sh "mvn ${env.MAVEN_GOALS}"
             }
         }
-    }
-    
-    def continuousDownloadAndBuild(String repoUrl, String mavenGoals) {
-        git url: repoUrl
-        sh "mvn ${mavenGoals}"
     }
 }
