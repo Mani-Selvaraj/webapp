@@ -7,6 +7,12 @@ pipeline {
     environment {
         REPO_URL = 'https://github.com/Mani-Selvaraj/webapp.git'
         MAVEN_GOALS = 'package'
+    post {
+        success {
+        archiveArtifacts 'target/*.war'
+    }
+}
+
     }
 
     stages {
