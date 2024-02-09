@@ -14,23 +14,25 @@ pipeline {
             }
         }
 
-        def continuousDownloadAndBuild(String repoUrl, String mavenGoals) {
-            steps {
-                git url: repoUrl
-                sh "mvn ${mavenGoals}"
-            }
-        }
-
         stage('ContinuousDownload_Build') {
             steps {
-                continuousDownloadAndBuild(env.REPO_URL, env.MAVEN_GOALS)
+                script {
+                    continuousDownloadAndBuild(env.REPO_URL, env.MAVEN_GOALS)
+                }
             }
         }
 
         stage('ContinuousBuild_Build') {
             steps {
-                continuousDownloadAndBuild(env.REPO_URL, env.MAVEN_GOALS)
+                script {
+                    continuousDownloadAndBuild(env.REPO_URL, env.MAVEN_GOALS)
+                }
             }
         }
+    }
+    
+    def continuousDownloadAndBuild(String repoUrl, String mavenGoals) {
+        git url: repoUrl
+        sh "mvn ${mavenGoals}"
     }
 }
