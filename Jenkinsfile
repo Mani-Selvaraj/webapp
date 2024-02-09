@@ -11,8 +11,10 @@ pipeline {
         }
 
         stage('Tool Install') {
-            tools {
-                maven 'Maven'
+            steps {
+                script {
+                    tool 'Maven'
+                }
             }
         }
 
