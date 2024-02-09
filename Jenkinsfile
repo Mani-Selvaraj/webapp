@@ -1,46 +1,26 @@
 pipeline {
-    agent any 
-    tools {
-        maven 'Maven'
-    }
+    agent any
+    tools { maven 'Maven' }
     stages {
-        stage ('Initialize') {
+        stage('Initialize') {
             steps {
-                sh '''
-                    echo "PATH = ${PATH}"
-                    echo "M2_HOME = ${M2_HOME}"
-                ''' 
+                sh 'echo "PATH = ${PATH}" && echo "M2_HOME = ${M2_HOME}"'
             }
         }
 
-        stage('ContinuousDownload_Build') {
+        def continuousDownloadAndBuild = {
             steps {
                 git 'https://github.com/Mani-Selvaraj/webapp.git'
-            }
-        }
-
-        stage('ContinuousBuild_Build') {
-            steps {
                 sh 'mvn package'
             }
         }
 
-        stage('ContinuousDownload_Master') {
-            // You can specify the node here or within the steps of this stage
-            steps {
-                node('master') {
-                    git 'https://github.com/Mani-Selvaraj/webapp.git'
-                }
-            }
+        stage('ContinuousDownload_Build') {
+            steps(continuousDownloadAndBuild)
         }
 
-        stage('ContinuousBuild_Master') {
-            // You can specify the node here or within the steps of this stage
-            steps {
-                node('master') {
-                    sh 'mvn package'
-                }
-            }
+        stage('ContinuousBuild_Build') {
+            steps(continuousDownloadAndBuild)
         }
     }
 }
