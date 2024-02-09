@@ -25,10 +25,5 @@ pipeline {
             steps(continuousDownloadAndBuild)
         }
     }
-
-    post {
-        success {
-            archiveArtifacts 'target/*.war'
-        }
-    }
+    
 }
