@@ -31,13 +31,20 @@ pipeline {
             }
         }
 
-        stage('Archive WAR File') {
-            steps {
-                script {
-                    // Assuming the WAR file is generated in the 'target' directory
-                    archiveArtifacts artifacts: "target/${env.WAR_FILE_NAME}", fingerprint: true
-                }
+       stage('Archive WAR File') {
+    steps {
+        script {
+            def warFile = 'target/your-artifact-id.war'
+
+            // Check if the WAR file exists before archiving
+            if (fileExists(warFile)) {
+                archiveArtifacts artifacts: warFile, onlyIfSuccessful: true, fingerprint: true
+            } else {
+                echo "No WAR file found at ${warFile}. Skipping archiving."
             }
         }
+    }
+}
+
     }
 }
