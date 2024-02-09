@@ -13,9 +13,18 @@ pipeline {
       }
     }
 
- 	stage('Build') {
-          steps {
-          sh 'mvn clean package'
+ node('master') 
+{
+    stage('ContinuousDownload_Master') 
+    {
+         git 'https://github.com/Mani-Selvaraj/webapp.git'
+        
+    }
+     stage('ContinuousBuild_Master') 
+    {
+        sh 'mvn package'
+    }    
+ }
         }
       }
 
