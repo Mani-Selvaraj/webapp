@@ -3,6 +3,12 @@ pipeline {
     tools { 
         maven 'Maven' 
     }
+
+    environment {
+        REPO_URL = 'https://github.com/Mani-Selvaraj/webapp.git'
+        MAVEN_GOALS = 'package'
+    }
+
     stages {
         stage('Initialize') {
             steps {
@@ -10,20 +16,18 @@ pipeline {
             }
         }
 
-        def continuousDownloadAndBuild = {
+        stage('ContinuousDownload_Build') {
             steps {
-                git 'https://github.com/Mani-Selvaraj/webapp.git'
-                sh 'mvn package'
+                git url: env.REPO_URL
+                sh "mvn ${env.MAVEN_GOALS}"
             }
         }
 
-        stage('ContinuousDownload_Build') {
-            steps(continuousDownloadAndBuild)
-        }
-
         stage('ContinuousBuild_Build') {
-            steps(continuousDownloadAndBuild)
+            steps {
+                git url: env.REPO_URL
+                sh "mvn ${env.MAVEN_GOALS}"
+            }
         }
     }
-    
 }
