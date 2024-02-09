@@ -33,7 +33,10 @@ pipeline {
 
         stage('Archive WAR File') {
             steps {
-                archiveArtifacts artifacts: "${env.WAR_FILE_NAME}", fingerprint: true
+                script {
+                    // Assuming the WAR file is generated in the 'target' directory
+                    archiveArtifacts artifacts: "target/${env.WAR_FILE_NAME}", fingerprint: true
+                }
             }
         }
     }
